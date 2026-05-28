@@ -1,0 +1,12 @@
+{
+  "name": "Is Market Open — US Stock Market Status",
+  "short_name": "Market Open?",
+  "description": "Live status of the US stock market (NYSE & NASDAQ) with a real-time countdown to the next open or close.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0e17",
+  "theme_color": "#0a0e17",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

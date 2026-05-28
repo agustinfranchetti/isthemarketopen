@@ -1,0 +1,36 @@
+# Is Market Open
+
+> A fast, minimal web app that shows the live status of the US stock market
+> (NYSE & NASDAQ) — open, closed, pre-market, or after-hours — with a real-time
+> countdown to the next open or close. Daylight saving time and US market
+> holidays are handled automatically. All times are based on the
+> America/New_York exchange clock.
+
+## Key facts
+
+- Regular session: 9:30 AM – 4:00 PM Eastern Time, Monday–Friday.
+- Pre-market: 4:00 AM – 9:30 AM ET.
+- After-hours: 4:00 PM – 8:00 PM ET.
+- Closed: weekends and US market holidays.
+- Early close (half-days): regular session ends at 1:00 PM ET (e.g. the day
+  after Thanksgiving and Christmas Eve); after-hours then runs to 5:00 PM ET.
+- Daylight saving time is applied automatically via the IANA time zone
+  database (America/New_York), so the display is correct year-round.
+
+## 2026 market holidays (full closures)
+
+New Year's Day (Jan 1), Martin Luther King Jr. Day (Jan 19),
+Presidents' Day (Feb 16), Good Friday (Apr 3), Memorial Day (May 25),
+Juneteenth (Jun 19), Independence Day observed (Jul 3), Labor Day (Sep 7),
+Thanksgiving (Nov 26), Christmas (Dec 25).
+
+## Pages
+
+- [Home / live status](https://ismarketopen.app/): The main app with status,
+  countdown, session timeline, and clocks for the user's time zone, Eastern,
+  and Pacific.
+
+## Notes
+
+- This site is informational only and is not investment advice.
+- Status updates every second client-side; there is no account or tracking.
