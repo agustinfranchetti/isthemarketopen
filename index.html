@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0a0e17" id="themeColor">
+<meta name="theme-color" content="#070a12" id="themeColor">
 <script>
   /* Apply saved theme before paint to avoid a flash; otherwise follow the system. */
   (function(){try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();
@@ -35,6 +35,10 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/favicon.svg">
 <link rel="manifest" href="/site.webmanifest">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
 <!-- Structured data -->
 <script type="application/ld+json">
@@ -77,207 +81,284 @@
 <style>
   :root{
     color-scheme:dark;
-    --bg:#0a0e17; --glow1:#16203a; --glow2:#1a1330;
-    --card:#121a2b; --card2:#0f1626;
-    --line:#1f2940; --line2:#2a3656;
-    --txt:#e8edf7; --muted:#8a97b1; --faint:#586079;
-    --chip:rgba(255,255,255,.03);
-    --shadow:0 20px 60px rgba(0,0,0,.45);
-    --open:#22d39a; --open-glow:rgba(34,211,154,.35);
-    --closed:#ff5d6c; --closed-glow:rgba(255,93,108,.30);
-    --pre:#5aa9ff; --after:#c08bff; --gold:#ffce5a;
-    --radius:20px;
+    --bg:#070a12;
+    --txt:#eef1f8; --muted:#98a2ba; --faint:#5c6680;
+    --glass:rgba(18,24,38,.42);
+    --glass-2:rgba(18,24,38,.30);
+    --glass-border:rgba(255,255,255,.10);
+    --glass-hi:rgba(255,255,255,.16);
+    --glass-shadow:0 40px 90px -30px rgba(0,0,0,.85);
+    --hairline:rgba(255,255,255,.08);
+    --aura-blend:screen;
+    --aura-op:.55;
+    --grain-op:.045;
+    /* default (closed) state colours; JS swaps data-state */
+    --accent:#8893ab;
+    --a1:#2c3756; --a2:#3a3160; --a3:#222b46;
   }
-  /* Light palette — applied when the user picks light, or when the system
-     prefers light and the user hasn't forced dark. */
   :root[data-theme="light"]{
     color-scheme:light;
-    --bg:#eef1f7; --glow1:#dbe6ff; --glow2:#efe0ff;
-    --card:#ffffff; --card2:#f5f7fc;
-    --line:#e2e7f0; --line2:#cdd6e8;
-    --txt:#16203a; --muted:#5a6685; --faint:#9aa6c0;
-    --chip:rgba(10,20,40,.04);
-    --shadow:0 16px 40px rgba(40,60,110,.14);
-    --open:#0fae7e; --open-glow:rgba(15,174,126,.22);
-    --closed:#e23744; --closed-glow:rgba(226,55,68,.18);
-    --pre:#2f74e0; --after:#8a45d6; --gold:#cf9200;
+    --bg:#e9edf6;
+    --txt:#101726; --muted:#586480; --faint:#9aa4bd;
+    --glass:rgba(255,255,255,.55);
+    --glass-2:rgba(255,255,255,.40);
+    --glass-border:rgba(255,255,255,.75);
+    --glass-hi:rgba(255,255,255,.95);
+    --glass-shadow:0 40px 80px -34px rgba(40,60,110,.45);
+    --hairline:rgba(20,30,60,.10);
+    --aura-blend:multiply;
+    --aura-op:.42;
+    --grain-op:.04;
   }
   @media (prefers-color-scheme:light){
     :root:not([data-theme="dark"]){
       color-scheme:light;
-      --bg:#eef1f7; --glow1:#dbe6ff; --glow2:#efe0ff;
-      --card:#ffffff; --card2:#f5f7fc;
-      --line:#e2e7f0; --line2:#cdd6e8;
-      --txt:#16203a; --muted:#5a6685; --faint:#9aa6c0;
-      --chip:rgba(10,20,40,.04);
-      --shadow:0 16px 40px rgba(40,60,110,.14);
-      --open:#0fae7e; --open-glow:rgba(15,174,126,.22);
-      --closed:#e23744; --closed-glow:rgba(226,55,68,.18);
-      --pre:#2f74e0; --after:#8a45d6; --gold:#cf9200;
+      --bg:#e9edf6;
+      --txt:#101726; --muted:#586480; --faint:#9aa4bd;
+      --glass:rgba(255,255,255,.55);
+      --glass-2:rgba(255,255,255,.40);
+      --glass-border:rgba(255,255,255,.75);
+      --glass-hi:rgba(255,255,255,.95);
+      --glass-shadow:0 40px 80px -34px rgba(40,60,110,.45);
+      --hairline:rgba(20,30,60,.10);
+      --aura-blend:multiply;
+      --aura-op:.42;
+      --grain-op:.04;
     }
   }
+
+  /* market-state palettes (apply to both themes) */
+  body[data-state="open"]  {--accent:#1fd39a; --a1:#0bbf86; --a2:#22e0c4; --a3:#0a93a8}
+  body[data-state="pre"]   {--accent:#5aa9ff; --a1:#2f74e0; --a2:#5ad1ff; --a3:#6a5cff}
+  body[data-state="after"] {--accent:#bb8cff; --a1:#8a45d6; --a2:#c08bff; --a3:#5a6cff}
+  body[data-state="closed"]{--accent:#9aa4bd; --a1:#2c3756; --a2:#3a3160; --a3:#222b46}
+
   *{box-sizing:border-box;margin:0;padding:0}
   html{-webkit-text-size-adjust:100%}
   body{
-    font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    background:
-      radial-gradient(1200px 600px at 50% -10%, var(--glow1) 0%, transparent 60%),
-      radial-gradient(900px 500px at 100% 110%, var(--glow2) 0%, transparent 55%),
-      var(--bg);
+    font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+    background:var(--bg);
     color:var(--txt);
     min-height:100dvh;
-    display:flex; flex-direction:column; align-items:center;
-    padding:clamp(16px,4vw,40px) 16px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:clamp(18px,4vw,48px) 18px;
     line-height:1.5;
     -webkit-font-smoothing:antialiased;
-    transition:background-color .3s ease,color .3s ease;
+    overflow-x:hidden;
+    transition:background-color .5s ease,color .4s ease;
   }
-  main{width:100%;max-width:560px;display:flex;flex-direction:column;gap:18px}
 
-  .topbar{display:flex;align-items:center;justify-content:space-between;gap:10px}
-  .brand{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:14px;font-weight:600;letter-spacing:.3px}
-  .brand .dot{width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold)}
+  /* --- living aurora background --- */
+  .aurora{position:fixed;inset:-25%;z-index:-2;filter:blur(70px);pointer-events:none}
+  .aurora i{
+    position:absolute;display:block;border-radius:50%;
+    mix-blend-mode:var(--aura-blend);opacity:var(--aura-op);
+    transition:background-color .9s ease;
+    will-change:transform;
+  }
+  .aurora i:nth-child(1){width:60vw;height:60vw;left:-8vw;top:-12vw;background:var(--a1);animation:drift1 26s ease-in-out infinite}
+  .aurora i:nth-child(2){width:55vw;height:55vw;right:-10vw;top:6vw;background:var(--a2);animation:drift2 32s ease-in-out infinite}
+  .aurora i:nth-child(3){width:50vw;height:50vw;left:18vw;bottom:-18vw;background:var(--a3);animation:drift3 29s ease-in-out infinite}
+  @keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(14vw,10vw) scale(1.18)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0) scale(1.05)}50%{transform:translate(-12vw,12vw) scale(.9)}}
+  @keyframes drift3{0%,100%{transform:translate(0,0) scale(.95)}50%{transform:translate(10vw,-12vw) scale(1.2)}}
+
+  .grain{
+    position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:var(--grain-op);
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode:overlay;
+  }
+
+  main{width:100%;max-width:600px;display:flex;flex-direction:column;gap:16px}
+
+  /* --- glass primitive --- */
+  .glass{
+    position:relative;
+    background:var(--glass);
+    -webkit-backdrop-filter:blur(26px) saturate(170%);
+    backdrop-filter:blur(26px) saturate(170%);
+    border:1px solid var(--glass-border);
+    border-radius:26px;
+    box-shadow:var(--glass-shadow),inset 0 1px 0 var(--glass-hi);
+    overflow:hidden;
+  }
+  .glass::after{ /* specular top sheen */
+    content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+    background:linear-gradient(160deg,var(--glass-hi),rgba(255,255,255,0) 32%);
+    opacity:.7;mix-blend-mode:screen;
+  }
+
+  /* --- topbar --- */
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:0 6px}
+  .brand{font-size:12px;font-weight:700;letter-spacing:3px;color:var(--muted);text-transform:uppercase}
   .theme-toggle{
-    display:inline-flex;align-items:center;justify-content:center;
-    width:38px;height:38px;border-radius:11px;cursor:pointer;
-    border:1px solid var(--line);background:var(--card);color:var(--muted);
+    display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;
+    border-radius:13px;cursor:pointer;color:var(--muted);
+    background:var(--glass);border:1px solid var(--glass-border);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
     transition:.2s;-webkit-tap-highlight-color:transparent;
   }
-  .theme-toggle:hover{color:var(--txt);border-color:var(--line2)}
-  .theme-toggle:active{transform:scale(.94)}
-  .theme-toggle svg{width:19px;height:19px}
+  .theme-toggle:hover{color:var(--txt);transform:translateY(-1px)}
+  .theme-toggle:active{transform:scale(.93)}
+  .theme-toggle svg{width:18px;height:18px}
 
-  .status-card{
-    position:relative;
-    background:linear-gradient(180deg,var(--card),var(--card2));
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    padding:clamp(26px,6vw,40px) clamp(20px,5vw,34px);
-    text-align:center;
-    overflow:hidden;
-    box-shadow:var(--shadow);
-  }
-  .status-card::before{
-    content:"";position:absolute;inset:0;opacity:.5;pointer-events:none;
-    background:radial-gradient(420px 200px at 50% 0%, var(--accent-glow,transparent), transparent 70%);
-    transition:background .4s ease;
-  }
-  .pill{
-    display:inline-flex;align-items:center;gap:9px;
-    padding:8px 16px;border-radius:999px;
-    font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;
-    border:1px solid var(--line);background:var(--chip);
-    color:var(--muted);
-  }
-  .pulse{width:9px;height:9px;border-radius:50%;background:currentColor;position:relative}
-  .pulse::after{content:"";position:absolute;inset:0;border-radius:50%;background:currentColor;animation:pulse 1.8s ease-out infinite}
-  @keyframes pulse{0%{transform:scale(1);opacity:.7}100%{transform:scale(3.2);opacity:0}}
+  /* --- hero --- */
+  .hero{padding:clamp(26px,5.5vw,40px);text-align:center}
+  .hero-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px}
+  .status-tag{display:inline-flex;align-items:center;gap:10px;font-size:11.5px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent)}
+  .led{width:9px;height:9px;border-radius:50%;background:var(--accent);position:relative;box-shadow:0 0 12px var(--accent)}
+  .led::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--accent);animation:ping 2s ease-out infinite}
+  @keyframes ping{0%{transform:scale(1);opacity:.7}100%{transform:scale(3);opacity:0}}
+  .et-inline{font-size:12px;color:var(--faint);letter-spacing:1px;white-space:nowrap}
 
   .headline{
-    font-size:clamp(40px,12vw,76px);
-    font-weight:800;letter-spacing:-1.5px;line-height:1;
-    margin:18px 0 6px;
-    position:relative;
+    font-family:"Instrument Serif",Georgia,serif;font-style:normal;font-weight:400;
+    font-size:clamp(76px,20vw,168px);line-height:.86;letter-spacing:-1px;
+    color:var(--accent);margin:6px 0 2px;
+    text-shadow:0 0 60px color-mix(in srgb,var(--accent) 45%,transparent);
+    transition:color .5s ease;
   }
-  .headline.open{color:var(--open);text-shadow:0 0 40px var(--open-glow)}
-  .headline.closed{color:var(--closed);text-shadow:0 0 40px var(--closed-glow)}
-  .sub{color:var(--muted);font-size:15px;font-weight:500;position:relative}
-  .sub strong{color:var(--txt)}
+  :root[data-theme="light"] .headline{text-shadow:0 2px 30px color-mix(in srgb,var(--accent) 25%,transparent)}
+  .sub{font-size:13.5px;color:var(--muted);max-width:42ch;margin:0 auto}
+  .sub b{color:var(--txt);font-weight:700}
 
-  .countdown{
-    margin-top:22px;position:relative;
-    display:flex;flex-direction:column;gap:6px;align-items:center;
-  }
-  .countdown .label{font-size:12px;text-transform:uppercase;letter-spacing:1.4px;color:var(--faint);font-weight:700}
-  .countdown .time{
-    font-variant-numeric:tabular-nums;font-feature-settings:"tnum";
-    font-size:clamp(30px,9vw,46px);font-weight:700;letter-spacing:1px;
-    font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
-  }
+  .countdown{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:24px}
+  .cd-label{font-size:12px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent)}
+  .cd-time{font-size:clamp(28px,8vw,44px);font-weight:700;letter-spacing:1px;font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
 
-  /* timeline of phases */
-  .phases{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-  .phase{
-    background:var(--card);border:1px solid var(--line);border-radius:14px;
-    padding:12px 8px;text-align:center;transition:.25s;
+  /* --- session progress bar --- */
+  .session{margin-top:26px}
+  .track{position:relative;height:12px;border-radius:7px;display:flex;gap:3px;overflow:visible}
+  .seg{height:100%;border-radius:5px;opacity:.32;transition:opacity .4s}
+  .seg.pre{flex:5.5;background:#5aa9ff}
+  .seg.reg{flex:6.5;background:#1fd39a}
+  .seg.aft{flex:4;background:#bb8cff}
+  body[data-state="pre"]   .seg.pre{opacity:.95}
+  body[data-state="open"]  .seg.reg{opacity:.95}
+  body[data-state="after"] .seg.aft{opacity:.95}
+  .now{
+    position:absolute;top:50%;width:2px;height:26px;background:var(--txt);
+    border-radius:2px;transform:translate(-50%,-50%);
+    box-shadow:0 0 12px var(--txt);transition:left 1s linear,opacity .4s;
+    opacity:0;
   }
-  .phase .nm{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
-  .phase .hr{font-size:11px;color:var(--faint);margin-top:4px;font-variant-numeric:tabular-nums}
-  .phase.active{border-color:var(--accent,#fff);box-shadow:0 0 0 1px var(--accent,#fff),0 8px 24px rgba(0,0,0,.4);transform:translateY(-2px)}
-  .phase.active .nm{color:var(--accent,#fff)}
-  .phase[data-p="pre"]{--accent:var(--pre)}
-  .phase[data-p="open"]{--accent:var(--open)}
-  .phase[data-p="after"]{--accent:var(--after)}
-  .phase[data-p="closed"]{--accent:var(--closed)}
+  .now::before{content:"";position:absolute;top:-6px;left:50%;width:9px;height:9px;border-radius:50%;background:var(--txt);transform:translateX(-50%);box-shadow:0 0 12px var(--txt)}
+  .session.live .now{opacity:1}
+  .session.live .track{}
+  .ticks{position:relative;height:16px;margin-top:7px;font-size:10px;color:var(--faint);letter-spacing:.5px}
+  .ticks span{position:absolute;transform:translateX(-50%);white-space:nowrap}
+  .ticks span:first-child{transform:none}
+  .ticks span:last-child{transform:translateX(-100%)}
 
-  /* clocks */
-  .clocks{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-  .clock{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 10px;text-align:center}
-  .clock .zone{font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:.6px;font-weight:700}
-  .clock .t{font-size:clamp(15px,4.5vw,19px);font-weight:700;margin-top:5px;font-variant-numeric:tabular-nums;font-family:ui-monospace,Menlo,Consolas,monospace}
-  .clock .d{font-size:11px;color:var(--muted);margin-top:2px}
-  .clock.you{border-color:var(--line2)}
-  .clock.you .zone{color:var(--gold)}
+  /* --- clocks strip --- */
+  .clocks{display:grid;grid-template-columns:repeat(3,1fr);padding:18px clamp(14px,4vw,24px)}
+  .clocks .col{text-align:center;padding:4px 6px;position:relative}
+  .clocks .col + .col::before{content:"";position:absolute;left:0;top:14%;height:72%;width:1px;background:var(--hairline)}
+  .clocks .zone{font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:var(--faint);font-weight:700}
+  .clocks .col.you .zone{color:var(--accent)}
+  .clocks .t{font-size:clamp(14px,4.4vw,18px);font-weight:700;margin-top:6px;font-variant-numeric:tabular-nums}
+  .clocks .d{font-size:10.5px;color:var(--muted);margin-top:2px}
 
-  .note{
-    background:var(--card);border:1px solid var(--line);border-radius:14px;
-    padding:14px 16px;color:var(--muted);font-size:13px;line-height:1.55;
-  }
-  .note b{color:var(--txt)}
-  footer{color:var(--faint);font-size:12px;text-align:center;line-height:1.6;margin-top:4px}
-  footer a{color:var(--muted);text-decoration:none;border-bottom:1px dotted var(--faint)}
+  .hours{padding:10px clamp(14px,4vw,22px) 14px}
+  .hrow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 10px;border-radius:11px;font-size:13px;transition:background-color .4s}
+  .hrow + .hrow{margin-top:2px}
+  .hk{display:flex;align-items:center;gap:10px;color:var(--muted);font-weight:500}
+  .hk i{width:8px;height:8px;border-radius:50%;background:currentColor;box-shadow:0 0 9px currentColor;flex:none}
+  .dot-pre{color:#5aa9ff}.dot-reg{color:#1fd39a}.dot-aft{color:#bb8cff}
+  .hv{color:var(--txt);font-weight:700;letter-spacing:.4px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  /* highlight the row for the current session */
+  body[data-state="pre"]   .hrow.pre,
+  body[data-state="open"]  .hrow.reg,
+  body[data-state="after"] .hrow.aft{background:color-mix(in srgb,var(--accent) 13%,transparent)}
+  body[data-state="pre"]   .hrow.pre .hk,
+  body[data-state="open"]  .hrow.reg .hk,
+  body[data-state="after"] .hrow.aft .hk{color:var(--txt)}
+  .hnote{margin-top:12px;padding-top:12px;border-top:1px solid var(--hairline);font-size:11px;color:var(--muted);text-align:center;line-height:1.65}
+  .hnote b{color:var(--txt);font-weight:700}
+  footer{font-size:11px;color:var(--muted);text-align:center;line-height:1.7;padding:2px 8px 0}
+  footer a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--hairline)}
+  footer a:hover{color:var(--txt)}
   .hidden-seo{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
-  @media(max-width:420px){
-    .clocks{grid-template-columns:1fr 1fr}
-    .clock.you{grid-column:1/-1}
+  /* entrance choreography */
+  .reveal{opacity:0;transform:translateY(18px);filter:blur(6px);animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards}
+  .topbar{animation-delay:.02s}
+  .hero{animation-delay:.10s}
+  .hours{animation-delay:.20s}
+  .clocks{animation-delay:.28s}
+  footer{animation-delay:.34s}
+  @keyframes rise{to{opacity:1;transform:none;filter:none}}
+
+  @media (max-width:430px){
+    .clocks{grid-template-columns:1fr 1fr;gap:10px 0}
+    .clocks .col.you{grid-column:1/-1;margin-bottom:6px}
+    .clocks .col.you + .col::before,.clocks .col:nth-child(2)::before{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .aurora i{animation:none}
+    .reveal{animation:none;opacity:1;transform:none;filter:none}
+    .led::after{animation:none}
   }
 </style>
 </head>
-<body>
+<body data-state="closed">
+
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+<div class="grain" aria-hidden="true"></div>
+
 <main>
-  <header class="topbar">
-    <span class="brand"><span class="dot"></span> IS THE MARKET OPEN?</span>
+  <header class="topbar reveal">
+    <span class="brand">isthemarketopen</span>
     <button id="themeBtn" class="theme-toggle" type="button" aria-label="Switch theme" title="Switch theme"></button>
   </header>
 
-  <section class="status-card" id="card" aria-live="polite">
-    <span class="pill" id="pill"><span class="pulse"></span><span id="pillText">Checking…</span></span>
+  <section class="hero glass reveal" aria-live="polite">
+    <div class="hero-top">
+      <span class="status-tag"><span class="led"></span><span id="pillText">Checking…</span></span>
+      <span class="et-inline" id="etInline">— ET</span>
+    </div>
+
     <h1 class="headline" id="headline">—</h1>
     <p class="sub" id="sub">Loading live US market status…</p>
 
     <div class="countdown">
-      <span class="label" id="cdLabel">Next event</span>
-      <span class="time" id="cdTime">--:--:--</span>
+      <span class="cd-label" id="cdLabel">Next event</span>
+      <span class="cd-time" id="cdTime">--:--:--</span>
+    </div>
+
+    <div class="session" id="session" aria-hidden="true">
+      <div class="track" id="track">
+        <div class="seg pre"></div>
+        <div class="seg reg"></div>
+        <div class="seg aft"></div>
+        <div class="now" id="nowMarker"></div>
+      </div>
+      <div class="ticks">
+        <span style="left:0%">4:00a</span>
+        <span style="left:34.4%">9:30a</span>
+        <span style="left:75%">4:00p</span>
+        <span style="left:100%">8:00p</span>
+      </div>
     </div>
   </section>
 
-  <section class="phases" aria-label="Trading sessions (Eastern Time)">
-    <div class="phase" data-p="pre"><div class="nm">Pre</div><div class="hr">4:00–9:30</div></div>
-    <div class="phase" data-p="open"><div class="nm">Open</div><div class="hr">9:30–16:00</div></div>
-    <div class="phase" data-p="after"><div class="nm">After</div><div class="hr">16:00–20:00</div></div>
-    <div class="phase" data-p="closed"><div class="nm">Closed</div><div class="hr">20:00–4:00</div></div>
+  <section class="hours glass reveal" aria-label="Trading hours (Eastern Time)">
+    <div class="hrow pre"><span class="hk"><i class="dot-pre"></i> Pre-market</span><span class="hv">4:00 – 9:30 AM</span></div>
+    <div class="hrow reg"><span class="hk"><i class="dot-reg"></i> Regular session</span><span class="hv">9:30 AM – 4:00 PM</span></div>
+    <div class="hrow aft"><span class="hk"><i class="dot-aft"></i> After-hours</span><span class="hv">4:00 – 8:00 PM</span></div>
+    <p class="hnote">All times <b>ET</b>, Mon–Fri · closed weekends &amp; US market holidays · half-days close <b>1:00 PM</b> · DST handled automatically</p>
   </section>
 
-  <section class="clocks" aria-label="Current time in key zones">
-    <div class="clock you"><div class="zone" id="youZone">Your time</div><div class="t" id="youTime">--:--</div><div class="d" id="youDate">—</div></div>
-    <div class="clock"><div class="zone">Eastern (NYSE)</div><div class="t" id="etTime">--:--</div><div class="d" id="etDate">—</div></div>
-    <div class="clock"><div class="zone">Pacific</div><div class="t" id="ptTime">--:--</div><div class="d" id="ptDate">—</div></div>
+  <section class="clocks glass reveal" aria-label="Current time in key zones">
+    <div class="col you"><div class="zone" id="youZone">You</div><div class="t" id="youTime">--:--</div><div class="d" id="youDate">—</div></div>
+    <div class="col"><div class="zone">Eastern · NYSE</div><div class="t" id="etTime">--:--</div><div class="d" id="etDate">—</div></div>
+    <div class="col"><div class="zone">Pacific</div><div class="t" id="ptTime">--:--</div><div class="d" id="ptDate">—</div></div>
   </section>
 
-  <section class="note" id="note">
-    <b>US market hours (Eastern Time):</b> Regular trading runs <b>9:30 AM–4:00 PM</b>, Mon–Fri.
-    Pre-market is <b>4:00–9:30 AM</b> and after-hours is <b>4:00–8:00 PM</b>.
-    The market is closed on weekends and US market holidays, and closes early at <b>1:00 PM</b> on a few half-days.
-    Daylight saving time is handled automatically.
-  </section>
-
-  <footer>
-    Times based on the <b>America/New_York</b> exchange clock. Not investment advice.<br>
-    NYSE &amp; NASDAQ regular sessions · <a href="/llms.txt">llms.txt</a>
+  <footer class="reveal">
+    Based on the <b>America/New_York</b> exchange clock · created by <a href="https://github.com/agustinfranchetti" target="_blank" rel="noopener">@agustinfranchetti</a> · <a href="/llms.txt">llms.txt</a>
   </footer>
 
-  <!-- crawlable text snapshot, updated live -->
   <p class="hidden-seo" id="seoText">The US stock market status is loading.</p>
 </main>
 
@@ -301,9 +382,8 @@
     }
     function apply(){
       const eff=effective();
-      // Icon shows the action: sun when currently dark, moon when currently light.
-      btn.innerHTML=eff==="dark"?SUN:MOON;
-      if(meta) meta.setAttribute("content", eff==="dark"?"#0a0e17":"#eef1f7");
+      btn.innerHTML=eff==="dark"?SUN:MOON;            // icon = the action
+      if(meta) meta.setAttribute("content", eff==="dark"?"#070a12":"#e9edf6");
     }
     btn.addEventListener("click",function(){
       const next=effective()==="dark"?"light":"dark";
@@ -311,24 +391,19 @@
       try{localStorage.setItem("theme",next);}catch(e){}
       apply();
     });
-    // Follow the system live while no explicit choice is set.
     mq.addEventListener("change",function(){ if(!root.getAttribute("data-theme")) apply(); });
     apply();
   })();
 
   // ---- Market holidays (full closures) and early-close half-days, in ET local dates ----
   const HOLIDAYS = new Set([
-    // 2026
     "2026-01-01","2026-01-19","2026-02-16","2026-04-03","2026-05-25",
     "2026-06-19","2026-07-03","2026-09-07","2026-11-26","2026-12-25",
-    // 2027
     "2027-01-01","2027-01-18","2027-02-15","2027-03-26","2027-05-31",
     "2027-06-18","2027-07-05","2027-09-06","2027-11-25","2027-12-24"
   ]);
   const EARLY_CLOSE = new Set([
-    // 2026 (close 1:00 PM ET)
     "2026-11-27","2026-12-24",
-    // 2027
     "2027-11-26"
   ]);
 
@@ -337,7 +412,6 @@
   const pad = n => String(n).padStart(2,"0");
   const dateKey = (y,m,d) => `${y}-${pad(m)}-${pad(d)}`;
 
-  // Wall-clock parts for a timezone at a given instant
   const partsFmt = tz => new Intl.DateTimeFormat("en-US",{
     timeZone:tz, hour12:false, weekday:"short",
     year:"numeric", month:"numeric", day:"numeric",
@@ -351,23 +425,18 @@
     let hour=parseInt(o.hour,10); if(hour===24) hour=0;
     return {year:+o.year, month:+o.month, day:+o.day, hour, minute:+o.minute, second:+o.second, weekday:o.weekday};
   }
-
-  // Offset (ms) such that  wallclockAsUTC - actualInstant
   function offsetMs(instant){
     const p=getParts(etFmt, instant);
     return Date.UTC(p.year,p.month-1,p.day,p.hour,p.minute,p.second) - instant;
   }
-  // Convert an ET wall-clock time to a real UTC instant (DST-safe)
   function etToInstant(y,m,d,h,mi){
     const guess=Date.UTC(y,m-1,d,h,mi,0);
     let inst=guess-offsetMs(guess);
-    inst=guess-offsetMs(inst); // refine across DST edges
+    inst=guess-offsetMs(inst);
     return inst;
   }
-
-  // Session schedule for a given ET calendar date, or null if closed
   function sessionFor(y,m,d){
-    const dow=new Date(Date.UTC(y,m-1,d)).getUTCDay(); // 0 Sun .. 6 Sat
+    const dow=new Date(Date.UTC(y,m-1,d)).getUTCDay();
     if(dow===0||dow===6) return null;
     const key=dateKey(y,m,d);
     if(HOLIDAYS.has(key)) return null;
@@ -380,9 +449,7 @@
       early
     };
   }
-
   function nextTradingSession(fromInstant){
-    // start from ET date of fromInstant, scan forward up to ~14 days
     const p=getParts(etFmt, fromInstant);
     let base=Date.UTC(p.year,p.month-1,p.day);
     for(let i=0;i<14;i++){
@@ -392,32 +459,20 @@
     }
     return null;
   }
-
   function evaluate(now){
     const p=getParts(etFmt, now);
     const today=sessionFor(p.year,p.month,p.day);
     let phase="closed", openNow=false, nextLabel, nextTime;
-
     if(today && now>=today.pre && now<today.after){
       if(now<today.open)      phase="pre";
       else if(now<today.close){phase="open"; openNow=true;}
       else                     phase="after";
     }
-
-    if(openNow){
-      nextLabel="Closes in";
-      nextTime=today.close;
-    } else if(phase==="pre"){
-      nextLabel="Opens in";
-      nextTime=today.open;
-    } else {
-      const s=nextTradingSession(now);
-      nextLabel="Opens in";
-      nextTime=s?s.open:null;
-    }
-    return {phase, openNow, nextLabel, nextTime, today};
+    if(openNow){ nextLabel="Closes in"; nextTime=today.close; }
+    else if(phase==="pre"){ nextLabel="Opens in"; nextTime=today.open; }
+    else { const s=nextTradingSession(now); nextLabel="Opens in"; nextTime=s?s.open:null; }
+    return {phase, openNow, nextLabel, nextTime, today, etParts:p};
   }
-
   function fmtCountdown(ms){
     if(ms<0) ms=0;
     let s=Math.floor(ms/1000);
@@ -427,26 +482,14 @@
     if(d>0) return `${d}d ${pad(h)}:${pad(m)}:${pad(s)}`;
     return `${pad(h)}:${pad(m)}:${pad(s)}`;
   }
-
-  // --- DOM refs ---
-  const el=id=>document.getElementById(id);
-  const card=el("card"), pill=el("pill"), pillText=el("pillText");
-  const headline=el("headline"), sub=el("sub");
-  const cdLabel=el("cdLabel"), cdTime=el("cdTime");
-  const seoText=el("seoText");
-
-  const PHASE_META={
-    pre:   {pill:"Pre-Market", color:"var(--pre)",    glow:"rgba(90,169,255,.25)", word:"OPEN",   note:"Pre-market trading is live."},
-    open:  {pill:"Regular Session", color:"var(--open)", glow:"var(--open-glow)",  word:"OPEN",   note:"Regular trading is live."},
-    after: {pill:"After-Hours", color:"var(--after)",  glow:"rgba(192,139,255,.25)",word:"OPEN",  note:"After-hours trading is live."},
-    closed:{pill:"Market Closed", color:"var(--closed)",glow:"var(--closed-glow)", word:"CLOSED", note:"The market is currently closed."}
-  };
-
   function timeIn(tz, now){
     const t=new Intl.DateTimeFormat("en-US",{timeZone:tz,hour:"numeric",minute:"2-digit",hour12:true}).format(now);
     const d=new Intl.DateTimeFormat("en-US",{timeZone:tz,weekday:"short",month:"short",day:"numeric"}).format(now);
     return {t,d};
   }
+
+  const el=id=>document.getElementById(id);
+  const TAG={pre:"Pre-Market",open:"Regular Session",after:"After-Hours",closed:"Market Closed"};
 
   let userZone="Local";
   try{ userZone=Intl.DateTimeFormat().resolvedOptions().timeZone||"Local"; }catch(e){}
@@ -458,46 +501,47 @@
     }catch(e){return userZone;}
   })();
 
+  const headline=el("headline"), sub=el("sub"), pillText=el("pillText");
+  const cdLabel=el("cdLabel"), cdTime=el("cdTime"), seoText=el("seoText");
+  const session=el("session"), nowMarker=el("nowMarker"), etInline=el("etInline");
+
   function render(){
     const now=Date.now();
     const r=evaluate(now);
-    const meta=PHASE_META[r.phase];
     const isOpen=r.openNow;
 
-    // headline
+    document.body.dataset.state=r.phase;
+
     headline.textContent=isOpen?"OPEN":"CLOSED";
-    headline.className="headline "+(isOpen?"open":"closed");
+    pillText.textContent=TAG[r.phase];
 
-    // pill
-    pillText.textContent=meta.pill;
-    pill.style.color=meta.color;
-    card.style.setProperty("--accent-glow", meta.glow);
+    const et=timeIn(ET, now);
+    etInline.textContent=et.t+" ET";
 
-    // sub line
-    const etNow=timeIn(ET, now);
-    if(r.phase==="pre")      sub.innerHTML=`Pre-market is trading — regular session opens at <strong>9:30 AM ET</strong>.`;
-    else if(r.phase==="open")sub.innerHTML=`NYSE &amp; NASDAQ regular session is <strong>live</strong>.`;
-    else if(r.phase==="after")sub.innerHTML=`Regular session is over — <strong>after-hours</strong> trading is live.`;
-    else                      sub.innerHTML=`NYSE &amp; NASDAQ are closed right now.`;
+    if(r.phase==="pre")        sub.innerHTML="Pre-market is trading — regular session opens <b>9:30 AM ET</b>.";
+    else if(r.phase==="open")  sub.innerHTML="The <b>NYSE &amp; NASDAQ</b> regular session is live.";
+    else if(r.phase==="after") sub.innerHTML="Regular session is over — <b>after-hours</b> is trading.";
+    else                       sub.innerHTML="The <b>NYSE &amp; NASDAQ</b> are closed right now.";
 
-    // countdown
     cdLabel.textContent=r.nextLabel;
     cdTime.textContent=r.nextTime?fmtCountdown(r.nextTime-now):"—";
 
-    // phase highlight
-    document.querySelectorAll(".phase").forEach(node=>{
-      node.classList.toggle("active", node.dataset.p===r.phase);
-    });
+    // session progress marker (4:00a → 8:00p ET = 960 min window)
+    let frac=null;
+    if(r.today){
+      const mins=r.etParts.hour*60+r.etParts.minute+r.etParts.second/60-240;
+      if(mins>=0 && mins<=960) frac=mins/960;
+    }
+    if(frac===null){ session.classList.remove("live"); }
+    else { session.classList.add("live"); nowMarker.style.left=(frac*100)+"%"; }
 
-    // clocks
-    const you=timeIn(userZone, now), et=etNow, pt=timeIn(PT, now);
+    const you=timeIn(userZone, now), pt=timeIn(PT, now);
     el("youZone").textContent="You · "+userAbbr;
     el("youTime").textContent=you.t; el("youDate").textContent=you.d;
     el("etTime").textContent=et.t;   el("etDate").textContent=et.d;
     el("ptTime").textContent=pt.t;   el("ptDate").textContent=pt.d;
 
-    // SEO live text
-    seoText.textContent=`The US stock market (NYSE & NASDAQ) is currently ${isOpen?"OPEN":"CLOSED"} (${meta.pill}). ${r.nextLabel} ${r.nextTime?fmtCountdown(r.nextTime-now):"—"}. Current Eastern Time: ${et.t}, ${et.d}.`;
+    seoText.textContent=`The US stock market (NYSE & NASDAQ) is currently ${isOpen?"OPEN":"CLOSED"} (${TAG[r.phase]}). ${r.nextLabel} ${r.nextTime?fmtCountdown(r.nextTime-now):"—"}. Current Eastern Time: ${et.t}, ${et.d}.`;
     document.title=`${isOpen?"OPEN":"CLOSED"} · Is the US Stock Market Open Right Now?`;
   }
 
