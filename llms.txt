@@ -26,7 +26,7 @@ Thanksgiving (Nov 26), Christmas (Dec 25).
 
 ## Pages
 
-- [Home / live status](https://ismarketopen.app/): The main app with status,
+- [Home / live status](https://isthemarketopen.vercel.app/): The main app with status,
   countdown, session timeline, and clocks for the user's time zone, Eastern,
   and Pacific.
 

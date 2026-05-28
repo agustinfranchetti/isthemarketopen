@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0c1322"/>
+      <stop offset="1" stop-color="#0a0e17"/>
+    </linearGradient>
+    <radialGradient id="glow1" cx="50%" cy="0%" r="70%">
+      <stop offset="0" stop-color="#16203a" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#16203a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowG" cx="50%" cy="50%" r="60%">
+      <stop offset="0" stop-color="#22d39a" stop-opacity="0.30"/>
+      <stop offset="1" stop-color="#22d39a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#121a2b"/>
+      <stop offset="1" stop-color="#0f1626"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow1)"/>
+  <rect x="660" y="170" width="620" height="380" fill="url(#glowG)"/>
+
+  <!-- brand -->
+  <g transform="translate(80,78)">
+    <circle cx="9" cy="2" r="9" fill="#ffce5a"/>
+    <text x="34" y="9" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="26" font-weight="700" letter-spacing="2" fill="#8a97b1">IS THE MARKET OPEN?</text>
+  </g>
+
+  <!-- status pill -->
+  <g transform="translate(80,150)">
+    <rect x="0" y="0" width="300" height="56" rx="28" fill="rgba(34,211,154,0.08)" stroke="#1f2940"/>
+    <circle cx="34" cy="28" r="8" fill="#22d39a"/>
+    <text x="56" y="37" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="23" font-weight="700" letter-spacing="2" fill="#22d39a">REGULAR SESSION</text>
+  </g>
+
+  <!-- headline -->
+  <text x="76" y="360" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="200" font-weight="800" letter-spacing="-6" fill="#22d39a">OPEN</text>
+
+  <!-- subline -->
+  <text x="80" y="430" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="34" font-weight="500" fill="#e8edf7">NYSE &amp; NASDAQ · live status &amp; countdown</text>
+  <text x="80" y="478" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="26" font-weight="400" fill="#8a97b1">Pre-market · After-hours · DST &amp; holidays handled automatically</text>
+
+  <!-- session chips -->
+  <g font-family="Segoe UI, Helvetica, Arial, sans-serif">
+    <g transform="translate(80,520)">
+      <rect width="170" height="60" rx="14" fill="url(#card)" stroke="#1f2940"/>
+      <text x="20" y="27" font-size="17" font-weight="700" fill="#5aa9ff">PRE</text>
+      <text x="20" y="48" font-size="16" fill="#586079">4:00–9:30</text>
+    </g>
+    <g transform="translate(264,520)">
+      <rect width="170" height="60" rx="14" fill="url(#card)" stroke="#22d39a"/>
+      <text x="20" y="27" font-size="17" font-weight="700" fill="#22d39a">OPEN</text>
+      <text x="20" y="48" font-size="16" fill="#586079">9:30–16:00</text>
+    </g>
+    <g transform="translate(448,520)">
+      <rect width="170" height="60" rx="14" fill="url(#card)" stroke="#1f2940"/>
+      <text x="20" y="27" font-size="17" font-weight="700" fill="#c08bff">AFTER</text>
+      <text x="20" y="48" font-size="16" fill="#586079">16:00–20:00</text>
+    </g>
+  </g>
+
+  <!-- right side mark -->
+  <g transform="translate(980,250)">
+    <circle cx="0" cy="0" r="118" fill="none" stroke="#1f2940" stroke-width="2"/>
+    <circle cx="0" cy="0" r="78" fill="#22d39a" opacity="0.12"/>
+    <circle cx="0" cy="0" r="78" fill="none" stroke="#22d39a" stroke-width="10" stroke-opacity="0.4"/>
+    <path d="M-58 44 L-14 0 L12 22 L60 -40" fill="none" stroke="#e8edf7" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <text x="80" y="608" font-family="ui-monospace, Consolas, monospace" font-size="22" fill="#586079">isthemarketopen.vercel.app</text>
+</svg>

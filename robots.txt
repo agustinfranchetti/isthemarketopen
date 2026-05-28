@@ -1,4 +1,4 @@
-# https://ismarketopen.app/robots.txt
+# https://isthemarketopen.vercel.app/robots.txt
 User-agent: *
 Allow: /
 
@@ -20,4 +20,4 @@ Allow: /
 User-agent: Applebot-Extended
 Allow: /
 
-Sitemap: https://ismarketopen.app/sitemap.xml
+Sitemap: https://isthemarketopen.vercel.app/sitemap.xml
